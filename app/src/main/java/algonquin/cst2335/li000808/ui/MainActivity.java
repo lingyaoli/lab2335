@@ -1,18 +1,20 @@
 package algonquin.cst2335.li000808.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
+import android.widget.CompoundButton;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import algonquin.cst2335.li000808.R;
 import algonquin.cst2335.li000808.data.MainViewModel;
-//import?
+import algonquin.cst2335.li000808.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private MainViewModel model;
@@ -43,11 +45,43 @@ public class MainActivity extends AppCompatActivity {
 //                theText.setText("The switch is on?" +b);
 //            });
 //
-//            model.isSelected.observe( owner: this, selected -> {
-//            variableBinding.checkBox.setChecked(selected);
-//            variableBinding.radioButton.setChecked(selected);
-//            variableBinding.switch1.setchecked(selected);
-});}}
+        viewModel.getCoffeeDrinker().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isChecked) {
+                variableBinding.checkBox.setChecked(isChecked);
+                variableBinding.radioButton.setChecked(isChecked);
+                variableBinding.switch1.setChecked(isChecked);
+
+                String message = "The value is now: " + isChecked;
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            viewModel.getCoffeeDrinker().postValue(isChecked);
+        });
+
+        switch1.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            viewModel.getCoffeeDrinker().postValue(isChecked);
+        });
+
+        radioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            viewModel.getCoffeeDrinker().postValue(isChecked);
+        });
+
+
+        binding.myImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int width = v.getWidth();
+                int height = v.getHeight();
+
+                String message = "The width = " + width + " and height = " + height;
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        });}}
 
 
 //        variableBinding.theButton.setOnClickListener(new View.OnClickListener(){

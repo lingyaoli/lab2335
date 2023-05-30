@@ -16,13 +16,6 @@
         android:id="@+id/textview"
         />
 
-    <Button
-        android:id="@+id/mybutton"
-        android:layout_width="381dp"
-        android:layout_height="wrap_content"
-        android:text="@string/click"
-        android:textSize="30dp" />
-
     <EditText
         android:textSize="30dp"
         android:layout_width="wrap_content"
@@ -31,5 +24,40 @@
         android:id="@+id/myEditText"
         />
 
+    <Button
+        android:id="@+id/mybutton"
+        android:layout_width="381dp"
+        android:layout_height="wrap_content"
+        android:text="@string/click"
+        android:textSize="30dp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Do you drink coffee?"
+        android:id="@+id/checkBox" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/switch1"
+        android:text="Do you drink coffee?" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioButton"
+        android:text="Do you drink coffee?" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/myImageView"
+        android:src="@drawable/logoalgonquin" />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logoalgonquin"
+        android:id="@+id/myimagebutton" />
 
 </LinearLayout>
