@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Lingyao\'s Android Labs</string>
-    <string name="hello_message">你好，世界！</string>
-    <string name="button_message">我是按键</string>
+    <string name="spin_message">旋转旗帜</string>
+    <string name="button1">按键 1</string>
+    <string name="button2">按键 2</string>
+    <string name="button3">按键 3</string>
 </resources>
