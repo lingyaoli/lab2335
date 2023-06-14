@@ -10,11 +10,25 @@ import android.widget.Toast;
 
 import java.util.regex.Pattern;
 
+/**
+ * @author Lingyao LI
+ * @version 1.0
+ */
 public class MainActivity extends AppCompatActivity {
-
+    /**This holds the text at the centre of the screen*/
     TextView tv = null;
+    /**This holds the password user need to typed in*/
     EditText et = null;
+    /**This hold the Login button*/
     Button btn = null;
+
+    /**
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +40,13 @@ public class MainActivity extends AppCompatActivity {
 
         btn.setOnClickListener( clk ->{
             String password = et.getText().toString();
-            checkPasswordComplexity(password);
+            boolean isComplex = checkPasswordComplexity(password);
+
+            if (isComplex) {
+                tv.setText("Your password meets the requirements");
+            } else {
+                tv.setText("You shall not pass!");
+            }
         });
     }
 
@@ -67,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Your password does not have a special symbol", Toast.LENGTH_SHORT).show();
             return false;
         } else {
-            Toast.makeText(MainActivity.this, "Your password meets all requirements", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(MainActivity.this, "Your password meets all requirements", Toast.LENGTH_SHORT).show();
             return true;
         }
     }
@@ -83,10 +103,10 @@ public class MainActivity extends AppCompatActivity {
 //            Toast.makeText(MainActivity.this, "Your password meets all requirements", Toast.LENGTH_SHORT).show();
 //        }
 
-    /** This function should check is pw using special characters or not
+    /** This function checks if a character is a special character.
      *
-     * @param c  The character of one of the #$%^&*!@?
-     * @return return true if c is one of the #$%^&*!@?, otherwise false
+     * @param c  The character to be checked
+     * @return Returns true if the character is one of the special characters, otherwise false.
      */
     boolean isSpecialCharacter(char c)
     {
