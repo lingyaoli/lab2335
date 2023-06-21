@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Lingyao\'s Android Labs</string>
+    <string name="hello_message">Type your password: </string>
+    <string name="button_message">LOGIN</string>
 </resources>
