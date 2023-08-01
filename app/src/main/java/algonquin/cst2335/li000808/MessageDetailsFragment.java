@@ -10,6 +10,7 @@ import algonquin.cst2335.li000808.databinding.DetailsLayoutBinding;
 
 
 public class MessageDetailsFragment extends Fragment {
+
     ChatMessage selected;
 
     public MessageDetailsFragment(ChatMessage m){

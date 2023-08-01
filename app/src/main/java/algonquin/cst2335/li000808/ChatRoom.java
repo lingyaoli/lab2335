@@ -2,6 +2,7 @@ package algonquin.cst2335.li000808;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -173,30 +174,46 @@ public class ChatRoom extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.item_1) {
-            // Handle the action when "item_1" (garbage can icon) is clicked
-            // Show an alert dialog asking the user if they want to delete the message
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Are you sure you want to delete this message?")
-                    .setPositiveButton("Yes", (dialog, id) -> {
-                        // Code to delete the selected ChatMessage
-                        int position = myAdapter.getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            ChatMessage selectedMessage = messages.get(position);
-                            messages.remove(selectedMessage);
-                            chatModel.messages.setValue(messages);
-                            myAdapter.notifyItemRemoved(position);
-                        }
-                    })
-                    .setNegativeButton("No", (dialog, id) -> {
-                        // User canceled the dialog, do nothing
-                    });
-            AlertDialog dialog = builder.create();
-            dialog.show();
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentLocation);
+
+            if (fragment instanceof MessageDetailsFragment) {
+                MessageDetailsFragment messageDetailsFragment = (MessageDetailsFragment) fragment;
+                ChatMessage chatMessage = messageDetailsFragment.selected;
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ChatRoom.this);
+                alertBuilder.setMessage("Do you want to delete the message: \n" + chatMessage.message)
+                        .setTitle("Question: ")
+                        .setNegativeButton("No", ((dialog, cLk) -> {
+                        }))
+                        .setPositiveButton("Yes", ((dialog, cIk) -> {
+                            int selectedMessageId = messages.indexOf(chatMessage);
+                            messages.remove(selectedMessageId);
+                            Executor thread3 = Executors.newSingleThreadExecutor();
+                            thread3.execute(() -> {
+                                mDAO.deleteMessage(chatMessage); // Use mDAO instead of chatMessageDAO
+                                runOnUiThread(() -> {
+                                    myAdapter.notifyItemRemoved(selectedMessageId);
+                                });
+                            });
+
+                            Snackbar.make(binding.getRoot(),
+                                            "You deleted one message " + selectedMessageId,
+                                            Snackbar.LENGTH_LONG)
+                                    .setAction("Undo", undoClick -> {
+                                        messages.add(selectedMessageId, chatMessage);
+                                        myAdapter.notifyItemInserted(selectedMessageId);
+                                    })
+                                    .show();
+
+                            getSupportFragmentManager().popBackStack();
+                        }))
+
+                        .create().show();
+            }
         } else if (item.getItemId() == R.id.item_about) {
             // Handle the action when "item_about" (About) is clicked
             // Show a toast with version and creator information
             String version = "Version 1.0";
-            String creator = "YourName"; // Replace "YourName" with your actual name
+            String creator = "Lingyao LI";
             String toastMessage = version + ", created by " + creator;
             Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
         }
@@ -205,23 +222,21 @@ public class ChatRoom extends AppCompatActivity {
     }
 
 
+        public class MyRowHolder extends RecyclerView.ViewHolder {
+            TextView messageText;
+            TextView timeText;
 
-
-    public class MyRowHolder extends RecyclerView.ViewHolder {
-        TextView messageText;
-        TextView timeText;
-        public MyRowHolder(@NonNull View itemView) {
-            super(itemView);
-            messageText=itemView.findViewById(R.id.message);
-            timeText=itemView.findViewById(R.id.time);
-
-            itemView.setOnClickListener(clk ->{
-                int position = getAbsoluteAdapterPosition();
-                ChatMessage selected = messages.get(position);
-                chatModel.selectedMessage.postValue(selected);
-            });
-
+            public MyRowHolder(@NonNull View itemView) {
+                super(itemView);
+                messageText = itemView.findViewById(R.id.message);
+                timeText = itemView.findViewById(R.id.time);
+                itemView.setOnClickListener(clk -> {
+                    int position = getAbsoluteAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        ChatMessage selected = messages.get(position);
+                        chatModel.selectedMessage.postValue(selected);
+                    }
+                });
         }
-    }
-
+}
 }
