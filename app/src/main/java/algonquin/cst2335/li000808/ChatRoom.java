@@ -12,9 +12,14 @@ import androidx.appcompat.app.AlertDialog;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -50,6 +55,8 @@ public class ChatRoom extends AppCompatActivity {
         }
         binding = ActivityChatRoomBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.myToolbar);
 // Create the database instance and initialize the DAO
         MessageDatabase db = Room.databaseBuilder(getApplicationContext(), MessageDatabase.class, "database-name").build();
         mDAO = db.cmDAO();
@@ -154,7 +161,51 @@ public class ChatRoom extends AppCompatActivity {
         };
         binding.recycleView.setAdapter(myAdapter);
         binding.recycleView.setLayoutManager(new LinearLayoutManager(this));
+
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.my_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.item_1) {
+            // Handle the action when "item_1" (garbage can icon) is clicked
+            // Show an alert dialog asking the user if they want to delete the message
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Are you sure you want to delete this message?")
+                    .setPositiveButton("Yes", (dialog, id) -> {
+                        // Code to delete the selected ChatMessage
+                        int position = myAdapter.getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            ChatMessage selectedMessage = messages.get(position);
+                            messages.remove(selectedMessage);
+                            chatModel.messages.setValue(messages);
+                            myAdapter.notifyItemRemoved(position);
+                        }
+                    })
+                    .setNegativeButton("No", (dialog, id) -> {
+                        // User canceled the dialog, do nothing
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        } else if (item.getItemId() == R.id.item_about) {
+            // Handle the action when "item_about" (About) is clicked
+            // Show a toast with version and creator information
+            String version = "Version 1.0";
+            String creator = "YourName"; // Replace "YourName" with your actual name
+            String toastMessage = version + ", created by " + creator;
+            Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
+        }
+
+        return true;
+    }
+
+
+
 
     public class MyRowHolder extends RecyclerView.ViewHolder {
         TextView messageText;
